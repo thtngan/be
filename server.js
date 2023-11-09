@@ -1,11 +1,9 @@
 const express = require("express");
-require("dotenv").config();
-
-const app = express();
-// var router = express.Router()
-
 var mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+require("dotenv").config();
 var connectString = process.env.DATABASE_URL
+
 mongoose.connect(connectString);
 const database = mongoose.connection;
 
@@ -17,7 +15,9 @@ database.once('connected', () => {
     console.log('Database Connected');
 })
 
+const app = express();
 const router = require('./app/routes/api');
+app.use(bodyParser.json());
 app.use('/api', router)
 // simple route
 app.get("/", (req, res) => {
