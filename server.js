@@ -16,10 +16,14 @@ database.once('connected', () => {
 })
 
 const app = express();
-const router = require('./app/routes/api');
 app.use(bodyParser.json());
-app.use('/api', router)
-// simple route
+
+const routerUser = require('./app/routes/userEndpoint');
+app.use('/user', routerUser)
+
+const routerAuth = require('./app/routes/authEndpoint');
+app.use('/auth', routerAuth)
+
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to application." });
 });
