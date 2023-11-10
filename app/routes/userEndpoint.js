@@ -34,6 +34,12 @@ router.put('/', auth.checkAuth, auth.checkUser, async (req, res) => {
             return res.status(400).json({ error: 'Invalid email format' });
         }
 
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+        if (req.body.password && !passwordRegex.test(req.body.password)) {
+            return res.status(400).json({
+                error: 'Invalid password format. It must have at least one lowercase letter, one uppercase letter, one special character, and be at least 6 characters long.',
+            });
+        }
         const userToUpdate = await User.findOne({ email });
 
         if (!userToUpdate) {
@@ -88,8 +94,10 @@ router.put('/', auth.checkAuth, auth.checkUser, async (req, res) => {
             userToUpdate.password = hashedPassword;
         }
 
-        const updatedUser = await userToUpdate.save();
-        res.status(200).json(updatedUser);
+        var savedUser = await userToUpdate.save()
+        savedUser = savedUser.toObject()
+        delete savedUser.password
+        res.status(200).json(savedUser);
     }
     catch (error) {
         res.status(400).json({ error: error.message });

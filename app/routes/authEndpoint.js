@@ -19,6 +19,13 @@ router.post('/signup', async (req, res) => {
             return res.status(400).json({ error: 'Invalid email format' });
         }
 
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+        if (req.body.password && !passwordRegex.test(req.body.password)) {
+            return res.status(400).json({
+                error: 'Invalid password format. It must have at least one lowercase letter, one uppercase letter, one special character, and be at least 6 characters long.',
+            });
+        }
+        
         const existinUser = await User.findOne({ email: req.body.email });
         if (existinUser) {
             return res.status(400).json({ error: 'Email already exists in the database' });
@@ -50,7 +57,9 @@ router.post('/signup', async (req, res) => {
             password: hashedPassword
         });
 
-        const savedUser = await newUser.save();
+        var savedUser = await newUser.save();
+        savedUser = savedUser.toObject()
+        delete savedUser.password
         res.status(201).json(savedUser);
     }
     catch (error) {
