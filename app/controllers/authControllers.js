@@ -96,4 +96,17 @@ function checkAuth(req, res, next) {
     }
 }
 
-module.exports = { signUp, signIn, checkAuth };
+function checkUser(req, res, next) {
+    try {
+        const jwtEmail = req.userData.email;
+        const userEmail = req.body.email;
+
+        if (jwtEmail !== userEmail) {
+            return res.status(403).json({ error: 'Forbidden - You cannot access or update other user information' });
+        }
+        next();
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+module.exports = { signUp, signIn, checkAuth, checkUser };

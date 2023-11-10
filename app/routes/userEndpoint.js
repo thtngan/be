@@ -5,7 +5,7 @@ const router = express.Router();
 const auth = require('../controllers/authControllers')
 
 
-router.get('/:email', auth.checkAuth, async (req, res) => {
+router.get('/:email', auth.checkAuth, auth.checkUser, async (req, res) => {
     try {
         const email = req.params.email;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,7 +24,7 @@ router.get('/:email', auth.checkAuth, async (req, res) => {
     }
 });
 
-router.put('/:email', auth.checkAuth, async (req, res) => {
+router.put('/', auth.checkAuth, auth.checkUser, async (req, res) => {
     try{
        
         const email = req.params.email;
