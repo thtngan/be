@@ -98,10 +98,13 @@ function checkAuth(req, res, next) {
 
 function checkUser(req, res, next) {
     try {
+        console.log(req.userData)
         const jwtEmail = req.userData.email;
-        const userEmail = req.body.email;
+        const userEmail = req.body.email || req.params.email;
 
         if (jwtEmail !== userEmail) {
+            console.log(jwtEmail)
+            console.log(userEmail)
             return res.status(403).json({ error: 'Forbidden - You cannot access or update other user information' });
         }
         next();

@@ -27,9 +27,10 @@ router.get('/:email', auth.checkAuth, auth.checkUser, async (req, res) => {
 router.put('/', auth.checkAuth, auth.checkUser, async (req, res) => {
     try{
        
-        const email = req.params.email;
+        const email = req.body.email;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
+            console.log(email)
             return res.status(400).json({ error: 'Invalid email format' });
         }
 
