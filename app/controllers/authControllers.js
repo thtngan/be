@@ -64,6 +64,9 @@ async function signUp(req, res) {
 
 async function signIn(req, res) {
     try {
+        console.log(req.body.email)
+        console.log(req.body.password)
+
         if (!req.body.email || !req.body.password) {
             return res.status(400).json({ error: 'Email and password are required' });
         }
@@ -74,6 +77,8 @@ async function signIn(req, res) {
         }
 
         const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+        console.log(user.password)
+
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Email or password incorrect' });
         }

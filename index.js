@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 require("dotenv").config();
 var connectString = process.env.DATABASE_URL
 
+
+
 mongoose.connect(connectString);
 const database = mongoose.connection;
 
@@ -16,6 +18,9 @@ database.once('connected', () => {
 })
 
 const app = express();
+app.use(express.static('public'))
+var cors = require('cors');
+app.use(cors({origin: true, credentials: true}));
 app.use(bodyParser.json());
 
 const routerUser = require('./app/routes/userEndpoint');
